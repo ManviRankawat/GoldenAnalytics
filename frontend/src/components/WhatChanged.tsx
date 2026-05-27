@@ -1,5 +1,5 @@
 import type { ChangesData, DimChange } from "../types";
-import { fmtAxis, fmtPct, TREND_COLORS } from "../utils";
+import { fmtPct, TREND_COLORS } from "../utils";
 
 interface Props {
   data: ChangesData | null;
@@ -92,7 +92,7 @@ export function WhatChanged({ data, loading }: Props) {
       accent: TREND_COLORS.stable,
       bg: "#eff6ff",
       entry: data?.highlights.newCategory ?? null,
-      valueFmt: (e) => fmtAxis(e.fy23),
+      valueFmt: (e) => fmtPct(e.pctChange),
     },
   ];
 

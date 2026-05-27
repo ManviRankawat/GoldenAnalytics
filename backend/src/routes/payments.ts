@@ -169,7 +169,7 @@ paymentsRouter.get("/dashboard", async (req: Request, res: Response) => {
 // ignored so we always have both years to compare; other filters apply.
 
 const MIN_BASELINE = 100_000;
-const MIN_NEW      = 250_000;
+const MIN_GROWTH_PCT = 10;  // minimum YoY growth to count as a "rising" category
 
 interface DimRow {
   label: string;
@@ -229,10 +229,15 @@ paymentsRouter.get("/changes", async (req: Request, res: Response) => {
       .filter((v) => v.fy22 >= MIN_BASELINE && v.pctChange != null && v.pctChange < 0)
       .sort((a, b) => (a.pctChange! - b.pctChange!))[0] ?? null;
 
-    // New category: didn't exist (or was tiny) in FY22, but ranks high in FY23
-    const newCategory = [...categories]
-      .filter((c) => c.fy22 === 0 && c.fy23 >= MIN_NEW)
-      .sort((a, b) => b.fy23 - a.fy23)[0] ?? null;
+    // Rising spend area: among categories that meaningfully grew (≥10% YoY),
+    const newCategory =
+      [...categories]
+        .filter((c) => c.label !== topIncrease?.label && c.pctChange != null && c.pctChange >= MIN_GROWTH_PCT)
+        .sort((a, b) => a.fy22 - b.fy22)[0]
+      ?? [...categories]
+        .filter((c) => c.label !== topIncrease?.label && c.absChange > 0)
+        .sort((a, b) => a.fy22 - b.fy22)[0]
+      ?? null;
 
     res.json({
       categories,
