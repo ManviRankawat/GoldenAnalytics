@@ -2,6 +2,8 @@
 
 React + TypeScript frontend · Express + TypeScript backend · PostgreSQL
 
+<img width="1470" height="798" alt="image" src="https://github.com/user-attachments/assets/7a44c931-412d-442a-a745-626ca150fa25" />
+
 ## Prerequisites
 - Node.js 18+
 - PostgreSQL 14+ running locally
